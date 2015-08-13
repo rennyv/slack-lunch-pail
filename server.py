@@ -24,12 +24,14 @@ def main():
     while True:
         # sleep until 11:30 AM
         t = datetime.now(time_zone)
-        future = datetime(t.year, t.month, t.day, waking_hour, waking_minutes, tzinfo=time_zone)
+        # -1 is DST hack
+        future = datetime(t.year, t.month, t.day, waking_hour - 1, waking_minutes, tzinfo=time_zone)
         if t.hour >= waking_hour:
             # wait until tomorrow!
             # admittedly not a perfect solution, because if we fire
             # this up at 11:20 it will wait until 11:30 the *next* day.
             # TODO: incorporate waking_minutes
+            # TODO: handle DST offset (does pytz know?)
             future += timedelta(days = 1)
 
 
@@ -41,6 +43,5 @@ def main():
         # we're awake!
         client = SlackClient(api_key)
         client.chat_post_message(channel, message, username=username)
-
 
 if __name__ == '__main__': main()
