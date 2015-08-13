@@ -41,7 +41,7 @@ def get_seconds_to_next_lunchtime(lunch_hour, lunch_minute, time_zone):
     future = datetime(t.year, t.month, t.day, lunch_hour, lunch_minute, tzinfo = time_zone)
 
     minutes_elapsed = t.hour * 60 + t.minute
-    if minutes_elapsed >= (lunch_hour * 60 + lunch_minutes):
+    if minutes_elapsed >= (lunch_hour * 60 + lunch_minute):
         # we're looking for TOMORROW's lunch.
         future += timedelta(days = 1)
 
