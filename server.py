@@ -2,6 +2,7 @@ from pyslack import SlackClient
 import yaml
 from datetime import datetime, timedelta
 import time
+import pytz
 
 username = 'lunchpail'
 channel = '#general'
@@ -18,10 +19,12 @@ def main():
     waking_hour = 11
     waking_minutes = 30
 
+    time_zone = pytz.timezone('MST')
+
     while True:
         # sleep until 11:30 AM
-        t = datetime.today()
-        future = datetime(t.year, t.month, t.day, waking_hour, waking_minutes)
+        t = datetime.now(time_zone)
+        future = datetime(t.year, t.month, t.day, waking_hour, waking_minutes, tzinfo=time_zone)
         if t.hour >= waking_hour:
             # wait until tomorrow!
             # admittedly not a perfect solution, because if we fire
