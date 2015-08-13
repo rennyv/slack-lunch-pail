@@ -22,20 +22,11 @@ def main():
     time_zone = pytz.timezone('MST')
 
     while True:
-        # sleep until 11:30 AM
-        t = datetime.now(time_zone)
-        # -1 is DST hack
-        future = datetime(t.year, t.month, t.day, waking_hour - 1, waking_minutes, tzinfo=time_zone)
-        if t.hour >= waking_hour:
-            # wait until tomorrow!
-            # admittedly not a perfect solution, because if we fire
-            # this up at 11:20 it will wait until 11:30 the *next* day.
-            # TODO: incorporate waking_minutes
-            # TODO: handle DST offset (does pytz know?)
-            future += timedelta(days = 1)
+        # sleep until 11:30
+        # -1 is a DST hack... TODO: figure out how to use pytz with DST
+        # TODO: figure out if the target date of 'next lunch' is in DST
+        seconds_to_wait = get_seconds_to_next_lunchtime(waking_hour - 1, waking_minutes, time_zone)
 
-
-        seconds_to_wait = (future - t).total_seconds()
         print "Sleeping for", seconds_to_wait, "seconds until lunch."
 
         time.sleep(seconds_to_wait)
@@ -43,5 +34,18 @@ def main():
         # we're awake!
         client = SlackClient(api_key)
         client.chat_post_message(channel, message, username=username)
+
+def get_seconds_to_next_lunchtime(lunch_hour, lunch_minute, time_zone):
+    # TODO: exclude weekends
+    t = datetime.now(time_zone)
+    future = datetime(t.year, t.month, t.day, lunch_hour, lunch_minute, tzinfo = time_zone)
+
+    minutes_elapsed = t.hour * 60 + t.minutes
+    if minutes_elapsed >= (lunch_hour * 60 + lunch_minutes):
+        # we're looking for TOMORROW's lunch.
+        future += timedelta(days = 1)
+
+    seconds_to_wait = (future - t).total_seconds()
+    return seconds_to_wait
 
 if __name__ == '__main__': main()
