@@ -6,46 +6,51 @@ import pytz
 
 username = 'lunchpail'
 channel = '#general'
-message = "it's lunchtime, motherfuckers"
+wait_time_in_minutes = 10
+
+def main():
+    today = datetime.today()
+    if is_a_workday(today):
+        # we're awake!
+        client = SlackClient(api_key)
+
+        announce_lunch(client)
+        wait_for_responses(client)
+        say_goodbye(client)
+
+def announce_lunch(client):
+    print 'Announcing lunch.'
+    send_message(client, "It's lunchtime, motherfuckers")
+
+def wait_for_responses(client):
+    start_time = datetime.now()
+    last_checked = start_time
+
+    print 'Waiting for responses.'
+    # wait 10 minutes for orders and stuff
+    while (last_checked - start_time).total_seconds() < wait_time_in_minutes * 60:
+
+        # TODO: Get messages since last time
+        # TODO: Handle those messages
+
+        last_checked = datetime.now()
+        time.sleep(2)
+
+    print 'Done with handling responses', wait_time_in_minutes, 'minutes has elapsed.'
+
+def say_goodbye(client):
+    send_message(client, "Enjoy your lunch, motherfuckers")
+    print 'Shutting down'
+
+def send_message(client, msg):
+    client.chat_post_message(channel, msg, username=username)
 
 def get_api_key():
     with open('secrets.yml') as stream:
         data = yaml.load(stream)
         return data["api_key"]
 
-def main():
-    api_key = get_api_key()
-
-    waking_hour = 11
-    waking_minutes = 30
-
-    time_zone = pytz.timezone('MST')
-
-    while True:
-        # sleep until 11:30
-        # -1 is a DST hack... TODO: figure out how to use pytz with DST
-        # TODO: figure out if the target date of 'next lunch' is in DST
-        seconds_to_wait = get_seconds_to_next_lunchtime(waking_hour - 1, waking_minutes, time_zone)
-
-        print "Sleeping for", seconds_to_wait, "seconds until lunch."
-
-        time.sleep(seconds_to_wait)
-
-        # we're awake!
-        client = SlackClient(api_key)
-        client.chat_post_message(channel, message, username=username)
-
-def get_seconds_to_next_lunchtime(lunch_hour, lunch_minute, time_zone):
-    # TODO: exclude weekends
-    t = datetime.now(time_zone)
-    future = datetime(t.year, t.month, t.day, lunch_hour, lunch_minute, tzinfo = time_zone)
-
-    minutes_elapsed = t.hour * 60 + t.minute
-    if minutes_elapsed >= (lunch_hour * 60 + lunch_minute):
-        # we're looking for TOMORROW's lunch.
-        future += timedelta(days = 1)
-
-    seconds_to_wait = (future - t).total_seconds()
-    return seconds_to_wait
+def is_a_workday(d):
+    return d.weekday() < 5
 
 if __name__ == '__main__': main()
