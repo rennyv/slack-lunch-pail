@@ -12,7 +12,7 @@ def main():
     today = datetime.today()
     if is_a_workday(today):
         # we're awake!
-        client = SlackClient(api_key)
+        client = SlackClient(get_api_key())
 
         announce_lunch(client)
         wait_for_responses(client)
