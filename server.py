@@ -43,7 +43,8 @@ def say_goodbye(client):
     print 'Shutting down'
 
 def send_message(client, msg):
-    client.chat_post_message(channel, msg, username=username, icon_emoji=":bento:")
+    icon_url = "http://i.imgur.com/zaeiI3B.jpg"
+    client.chat_post_message(channel, msg, username=username, icon_url=icon_url)
 
 def get_api_key():
     with open('secrets.yml') as stream:
