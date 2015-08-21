@@ -2,7 +2,6 @@ from pyslack import SlackClient
 import yaml
 from datetime import datetime, timedelta
 import time
-import pytz
 
 username = 'lunchpail'
 channel = '#general'
