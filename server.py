@@ -2,6 +2,7 @@ from pyslack import SlackClient
 import yaml
 from datetime import datetime, timedelta
 import time
+import random
 
 username = 'lunchpail'
 channel = '#general'
@@ -20,6 +21,10 @@ def main():
 def announce_lunch(client):
     print 'Announcing lunch.'
     send_message(client, "It's lunchtime, motherfuckers")
+
+def suggest_places(client):
+    possible_places = ['Mucho Burrito', 'the University Food Court', 'the Mall']
+    send_message(client, "Maybe today you motherfuckers should go to " + random.choice(possible_places))
 
 def wait_for_responses(client):
     start_time = datetime.now()
