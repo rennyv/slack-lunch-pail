@@ -15,6 +15,7 @@ def main():
         client = SlackClient(get_api_key())
 
         announce_lunch(client)
+        suggest_places(client)
         wait_for_responses(client)
         say_goodbye(client)
 
@@ -24,7 +25,7 @@ def announce_lunch(client):
 
 def suggest_places(client):
     possible_places = ['Mucho Burrito', 'the University Food Court', 'the Mall']
-    send_message(client, "Maybe today you motherfuckers should go to " + random.choice(possible_places))
+    send_message(client, "maybe today you motherfuckers should go to " + random.choice(possible_places))
 
 def wait_for_responses(client):
     start_time = datetime.now()
