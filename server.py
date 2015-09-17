@@ -24,7 +24,7 @@ def announce_lunch(client):
     send_message(client, "It's lunchtime, motherfuckers")
 
 def suggest_places(client):
-    possible_places = ['Mucho Burrito', 'the University Food Court', 'the Mall', 'Five Guys', 'train station Vietnamese', "Harveys", 'Wendys']
+    possible_places = ['Mucho Burrito', 'the University Food Court', 'the Mall', 'Five Guys', 'train station Vietnamese', "Harveys", "Wendy's"]
     send_message(client, "maybe today you motherfuckers should go to " + random.choice(possible_places))
 
 def wait_for_responses(client):
