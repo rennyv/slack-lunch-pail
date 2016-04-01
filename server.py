@@ -24,7 +24,9 @@ def announce_lunch(client):
     send_message(client, "It's lunchtime, motherfuckers")
 
 def suggest_places(client):
-    possible_places = ['Mucho Burrito'] * 2 + ['the University Food Court'] * 20 + ['the Mall'] * 1 + ['Five Guys'] * 3 + ['train station Vietnamese'] * 1 + ['Harveys'] * 1 + ["Wendy's"] * 3 + ["White Elephant"] * 1
+    possible_places = ['Mucho Burrito'] * 2 + ['the Mall'] * 1 + ['Five Guys'] * 3 + ['train station Vietnamese'] * 1 + ['Harveys'] * 1 + ["Wendy's"] * 1 + ["Jimmy's A&A"] * 1
+    if not is_friday(datetime.today()):
+        possible_places = possible_places + ['the University Food Court'] * 20
     send_message(client, "maybe today you motherfuckers should go to " + random.choice(possible_places))
 
 def wait_for_responses(client):
@@ -58,5 +60,8 @@ def get_api_key():
 
 def is_a_workday(d):
     return d.weekday() < 5
+    
+def is_friday(d):
+    return d.weekday() == 4
 
 if __name__ == '__main__': main()
